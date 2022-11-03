@@ -4,7 +4,7 @@
   "description": "A Multi Guild Proxy Bot for Discord",
   "main": "index.js",
   "scripts": {
-    "start": "./pocketbase/pocketbase serve --http='0.0.0.0:9095' & node deploy-commands.js && node index.js",
+    "start": "./pocketbase/pocketbase serve --http='0.0.0.0:8090' & node deploy-commands.js && node index.js",
     "dev": "./pocketbase/pocketbase serve & node deploy-dev-commands.js && npx nodemon index.js"
   },
   "repository": {
