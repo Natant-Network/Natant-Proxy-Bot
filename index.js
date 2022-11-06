@@ -1,7 +1,7 @@
 // Require the necessary discord.js classes
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, Events, GatewayIntentBits, Collection, ActivityType } = require('discord.js');
 const { token, prefix } = require('./config.json');
 
 // Create a new client instance
@@ -23,7 +23,6 @@ for (const file of commandFiles) {
 
 client.on(Events.InteractionCreate, async interaction => {
 	// if (!interaction.isChatInputCommand()) return;
-
 	const command = interaction.client.commands.get(interaction.commandName);
 
 	if (!command) {
@@ -38,36 +37,23 @@ client.on(Events.InteractionCreate, async interaction => {
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
-// client.on(Events.MessageCreate, async message => {
-// 	// if (!interaction.isChatInputCommand()) return;
-
-// 	// const command = message.client.commands.get(message.commandName);
-
-// 	// if (!command) {
-// 	// 	console.error(`No command matching ${message.commandName} was found.`);
-// 	// 	return;
-// 	// }
-
-// 	// try {
-// 	// 	await command.execute(message);
-// 	// } catch (error) {
-// 	// 	console.error(error);
-// 	// 	await message.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-// 	// }
-// 	const args = message.content.slice(prefix.length).trim().split(/ +/);
-// 	const command = args.shift().toLowerCase();
-// 	try {
-// 		client.commands.get(command).execute(message, args);
-// 	} catch (error) {
-// 		console.error(error);
-// 		message.reply('there was an error trying to execute that command!');
-// 	}
-// });
-
 
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
+	const activities = ['The Support Server!', 'Weeb Network', `Over ${client.guilds.cache.size} SERVER(S)`];
+	const updateDelay = 5; // in seconds
+  	let currentIndex = 0;
+	  setInterval(() => {
+		const activity = activities[currentIndex];
+		client.user.setActivity((activity), { type: ActivityType.Watching });
+		  
+			// update currentIndex
+		// if it's the last one, get back to 0
+		currentIndex = currentIndex >= activities.length - 1 
+		  ? 0
+		  : currentIndex + 1;
+	  }, updateDelay * 1000);
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
