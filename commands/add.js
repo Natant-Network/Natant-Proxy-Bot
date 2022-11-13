@@ -36,7 +36,7 @@ module.exports = {
                     if (getid == guildID) {
                         actualid = getid;
                         id = records[i].id;
-                        console.log(id);
+                        // console.log(id);
                         break;
                     } else {
                     i ++
@@ -60,33 +60,37 @@ module.exports = {
                     // get previous link id and add 1
                     let previouslinkid = '';
                     let i3 = 0;
-                    while (i3 < linkss) {
-                        let getid = '';
-                        // console.log(i);
-                        getid = records[i3].guildID;
-                        let actualid = '';
-                        if (getid == guildID) {
-                            actualid = getid;
-                            previouslinkid = records[i3].links.id;
-                            // console.log(previouslinkid);
-                            break;
-                        } else {
-                        i3 ++
-                        }}
-                        // add 1 to previous link id
+                      // get num of how much links there are from json object
+                        let num = '';
+                        num = previouslinks.length;
+                        // console.log(num);
+                        // get the id of the last link
+                        let i4 = 0;
+                        while (i4 < num) {
+                            let getid = '';
+                            // console.log(i);
+                            getid = previouslinks[i4].id;
+                            let actualid = '';
+                            if (i4 == num - 1) {
+                                actualid = getid;
+                                previouslinkid = actualid;
+                                // console.log(previouslinkid);
+                                break;
+                            } else {
+                            i4 ++
+                            }}
                         let newlinkid = '';
-                        if (previouslinkid == null) {
-                            newlinkid = 1;
-                        } else {
-                        newlinkid = previouslinkid + 1;
-                        }
+                        // console.log(`previous link id: ${previouslinkid}`);
+                        isNaN(previouslinkid) ? newlinkid = 1 : newlinkid = previouslinkid + 1;
                         // console.log(newlinkid);
 
                 // add new link to previous links
-                console.log(previouslinks);
+               // console.log(previouslinks);
                 let newlinks = '';
                 let name = interaction.options.getString('name').toLowerCase();
-                newlinks =  { "link": link, "id": newlinkid, "name": name };
+                // filter spaces for dashes
+                let name2 = name.replace(/ /g, '-');
+                newlinks =  { "link": link, "id": newlinkid, "name": name2 };
                 // combine previous links and new link
                 let combinedlinks = '';
                 // //combinedlinks = Object.assign(previouslinks, { newlinks });
@@ -94,7 +98,7 @@ module.exports = {
                 let obj = JSON.parse(stringify);
                 obj.push(newlinks);
                 // combinedlinks = obj;
-                console.log(obj);
+                // console.log(obj);
                 const update = await newdb.records.update('links', id, { links: obj });
                 return;
             }
@@ -133,13 +137,13 @@ module.exports = {
                 getroleid = records[x].roleIDs;
                 let roleidfilter = getroleid.replace('<@&', '')
                 let roleidfilter2 = roleidfilter.replace('>', '')
-                console.log(roleidfilter2);
+                // console.log(roleidfilter2);
                 // get roles the user has
                 // roles.fetch();
                 let roleids = await interaction.guild.roles.fetch(roleidfilter2);
-                console.log(roleids);
+               //  console.log(roleids);
                 if (! await interaction.member.roles.cache.has(roleidfilter2)) {
-                    console.log(await interaction.member.roles.cache.has(roleidfilter2));
+                   // console.log(await interaction.member.roles.cache.has(roleidfilter2));
                     return await interaction.followUp('You do not have the required role to use this command!');
                 } else if (await interaction.member.roles.cache.has(roleidfilter2)) {
                     break;
