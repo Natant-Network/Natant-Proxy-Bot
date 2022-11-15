@@ -109,86 +109,74 @@ module.exports = {
                 const authData = await newdb.admins.authViaEmail(`${email}`, `${password}`);
                 // Get the guilds data
                 const records = await newdb.records.getFullList('guilds');
-                if (records.length === 0) {
-                     return await interaction.followUp('Your guild is not in the database! Please run /get-started to add your guild to the database.');
+                // const guildscount = await client.records.getFullList('guilds');
+                const check = await await newdb.records.getFullList('guilds', parseInt(records.length), {
+                    filter: `guildID = ${guildID}`,
+                });
+                if (check.length == 0) {
+                    await interaction.followUp({content: 'This server is not setup! Ask the server owner to run /get-started'});
+                    return;
                 } else {
-                // Get how many guilds there are
-                let guilds = records.length;
-                // get the guilid
-                let id = '';
-                let i = 0;
-                while (i < guilds) {
-                    let getid = '';
-                    // console.log(i);
-                    getid = records[i].guildID;
-                    let actualid = '';
-                    if (getid != guildID) {
-                         return await interaction.followUp('This guild is not in the database. Please use the /get-started command to add it.');
-                         // break;
-                    } else if ( getid == guildID) {
-                        break;
+                    let x = 0;
+                    let guildsr = records.length;
+                    while (x < guildsr) {
+                        let getroleid = ''
+                        getroleid = records[x].roleIDs;
+                        let roleidfilter = getroleid.replace('<@&', '')
+                        let roleidfilter2 = roleidfilter.replace('>', '')
+                        // console.log(roleidfilter2);
+                        // get roles the user has
+                        // roles.fetch();
+                        let roleids = await interaction.guild.roles.fetch(roleidfilter2);
+                       //  console.log(roleids);
+                        if (! await interaction.member.roles.cache.has(roleidfilter2)) {
+                           // console.log(await interaction.member.roles.cache.has(roleidfilter2));
+                            return await interaction.followUp('You do not have the required role to use this command!');
+                        } else if (await interaction.member.roles.cache.has(roleidfilter2)) {
+                            break;
+                        }
+                        else {
+                            x++
+                        }
+                    
                     }
-                }
-            }
-            let x = 0;
-            let guildsr = records.length;
-            while (x < guildsr) {
-                let getroleid = ''
-                getroleid = records[x].roleIDs;
-                let roleidfilter = getroleid.replace('<@&', '')
-                let roleidfilter2 = roleidfilter.replace('>', '')
-                // console.log(roleidfilter2);
-                // get roles the user has
-                // roles.fetch();
-                let roleids = await interaction.guild.roles.fetch(roleidfilter2);
-               //  console.log(roleids);
-                if (! await interaction.member.roles.cache.has(roleidfilter2)) {
-                   // console.log(await interaction.member.roles.cache.has(roleidfilter2));
-                    return await interaction.followUp('You do not have the required role to use this command!');
-                } else if (await interaction.member.roles.cache.has(roleidfilter2)) {
-                    break;
-                }
-                else {
-                    x++
-                }
-
-            }
-            await interaction.followUp({ content: 'Ok, what are the link(s) you want to add?' });
-            await interaction.followUp({ content: 'Tip: You can add multiple links by separating them with a comma (,) with no space. (Timeout 1 minute)', ephemeral: true });
-            const filter = m => m.author.id == interaction.user.id;
-			const collector = interaction.channel.createMessageCollector({ filter, max: 1, time: 60000, errors: ['time'] });
-			collector.on('collect', async (m) => {
-                let links = m.content;
-                let linkarray = links.split(',');
-                let i = 0;
-                // check to make sure there are no spaces in the links
-                if (links.includes(' ')) {
-                    // return await interaction.followUp({ content: 'Please do not include spaces in your links! Please re run the command and try again.'});
-                    collector.stop('spaces');
-                }
-                else {
-                while (i < linkarray.length) {
-                    let link = linkarray[i];
-                    if (link.startsWith('https://')) {
-                        await interaction.followUp({ content: `Adding ${link} to the database!` });
-                        // add link to the links variable
-                        await interaction.followUp({ content: 'Added!' });
-                        await dbconnectandinsert(link); 
-                        i ++;
-                    } else {
-                        await interaction.followUp({ content: `Added https://${link} to the database!` });
-                        i ++;
+                    await interaction.followUp({ content: 'Ok, what are the link(s) you want to add?' });
+                    await interaction.followUp({ content: 'Tip: You can add multiple links by separating them with a comma (,) with no space. (Timeout 1 minute)', ephemeral: true });
+                    const filter = m => m.author.id == interaction.user.id;
+			        const collector = interaction.channel.createMessageCollector({ filter, max: 1, time: 60000, errors: ['time'] });
+			        collector.on('collect', async (m) => {
+                        let links = m.content;
+                        let linkarray = links.split(',');
+                        let i = 0;
+                        // check to make sure there are no spaces in the links
+                        if (links.includes(' ')) {
+                            // return await interaction.followUp({ content: 'Please do not include spaces in your links! Please re run the command and try again.'});
+                            collector.stop('spaces');
+                        }
+                        else {
+                        while (i < linkarray.length) {
+                            let link = linkarray[i];
+                            if (link.startsWith('https://')) {
+                                await interaction.followUp({ content: `Adding ${link} to the database!` });
+                                // add link to the links variable
+                                await interaction.followUp({ content: 'Added!' });
+                                await dbconnectandinsert(link); 
+                                i ++;
+                            } else {
+                                await interaction.followUp({ content: `Added https://${link} to the database!` });
+                                i ++;
+                            }
+                        }
                     }
-                }
-            }
-            });
-            collector.on('end', async (collected, reason) => {
-                if (reason == 'time') {
-                    await interaction.followUp({ content: 'You took too long to respond! Please run the command again.', ephemeral: true });
-                } else if (reason == 'spaces') {
-                   await interaction.followUp({ content: 'Please do not include spaces in your links! Please re run the command and try again.', ephemeral: true });
-                }
-                //interaction.followUp(`Collected ${collected.size} items`);
-            });
-        }
+                    });
+                    collector.on('end', async (collected, reason) => {
+                        if (reason == 'time') {
+                            await interaction.followUp({ content: 'You took too long to respond! Please run the command again.', ephemeral: true });
+                        } else if (reason == 'spaces') {
+                           await interaction.followUp({ content: 'Please do not include spaces in your links! Please re run the command and try again.', ephemeral: true });
+                        }
+                        //interaction.followUp(`Collected ${collected.size} items`);
+                    });
+                 }
+                }       
 }

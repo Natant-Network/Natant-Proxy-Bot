@@ -33,15 +33,21 @@ client.on(Events.InteractionCreate, async interaction => {
 	try {
 		await command.execute(interaction);
 	} catch (error) {
+		try {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		} catch (error
+		) {
+			console.error(error);
+			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
 	}
 });
 
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
-	const activities = ['The Support Server!', 'Weeb Network', `Over ${client.guilds.cache.size} SERVER(S)`];
+	const activities = ['The Support Server!', 'Weeb Network', `${client.guilds.cache.size} SERVER(S)`];
 	const updateDelay = 5; // in seconds
   	let currentIndex = 0;
 	  setInterval(() => {
