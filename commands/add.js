@@ -22,6 +22,7 @@ module.exports = {
             .setDescription('Link to add to the database')
             .setRequired(true)),
         async autocomplete (interaction) {
+            try {
             let guildid = interaction.guild.id;
             let userid = interaction.user.id;
             const focusedValue = interaction.options.getFocused();
@@ -33,6 +34,7 @@ module.exports = {
             const check = await await db.records.getFullList('links', parseInt(guildscount.length), {
                 filter: `guildID = ${guildid}`,
             });
+            // check if the guild is in the database
             // get names of all links in the database json
             // get names of all the links in the json object
             let linknames = [];
@@ -51,8 +53,12 @@ module.exports = {
 		    await interaction.respond(
 		    	filtered.map(choice => ({ name: choice, value: choice })),
 		    );
+            } catch (error) {
+                console.log(error);
+            }
         },
         async execute(interaction) {
+            try { 
             interaction.reply({ content: 'Checking if you have the required role...', ephemeral: true });
             let guildID = interaction.guild.id;
             let userID = interaction.user.id;
@@ -142,5 +148,9 @@ module.exports = {
             } else {
                 return interaction.followUp({ content: 'You do not have the required role to use this command', ephemeral: true });
             }
+        } catch (error) {
+            console.log(error);
+            interaction.followUp({ content: 'An error occured or this server is not setup yet', ephemeral: true });
         }
+    }
     };
