@@ -8,6 +8,9 @@ module.exports = {
 		.setName('get-started')
 		.setDescription('Set up your server for the first time.'),
 	async execute(interaction, args) {
+		if (!interaction.inGuild()) {
+			return interaction.reply({ content: 'You can\'t use this command in DMs'});
+		}
 		let ownerid = interaction.guild.ownerId;
 		let userid = interaction.user.id;
 		if (ownerid !== userid) {

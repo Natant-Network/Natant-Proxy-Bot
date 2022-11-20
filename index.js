@@ -5,7 +5,7 @@ const { Client, Events, GatewayIntentBits, Collection, ActivityType } = require(
 const { token, prefix } = require('./config.json');
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages] });
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -22,8 +22,8 @@ for (const file of commandFiles) {
 }
 
 client.on(Events.InteractionCreate, async interaction => {
-	// if (!interaction.isChatInputCommand()) return;
 	if (interaction.isChatInputCommand()) {
+		// const user = client.users.cache.get(interaction.member.user.id);
 		const command = interaction.client.commands.get(interaction.commandName);
 		if (!command) {
 			console.error(`No command matching ${interaction.commandName} was found.`);
@@ -42,7 +42,8 @@ client.on(Events.InteractionCreate, async interaction => {
 				await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
 			}
 		}
-} else if (interaction.isAutocomplete) {
+	}
+ else if (interaction.isAutocomplete) {
 		const command = interaction.client.commands.get(interaction.commandName);
 
 		if (!command) {

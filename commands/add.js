@@ -58,6 +58,9 @@ module.exports = {
             }
         },
         async execute(interaction) {
+            if (!interaction.inGuild()) {
+                return interaction.reply({ content: 'You can\'t use this command in DMs'});
+            }
             try { 
             interaction.reply({ content: 'Checking if you have the required role...', ephemeral: true });
             let guildID = interaction.guild.id;
