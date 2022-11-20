@@ -1,6 +1,6 @@
-const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook, DMChannel, escapeNumberedList } = require('discord.js');
+const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook, DMChannel } = require('discord.js');
 const { email, password } = require('../config.json');
-const PocketBase = require('pocketbase/cjs');
+const PocketBase = require('pocketbase/cjs')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -48,9 +48,6 @@ module.exports = {
         }
     },
     async execute(interaction, args, client) {
-        try {
-        async function run() {
-        try {
         if (!interaction.inGuild()) {
             return interaction.reply({ content: 'You can\'t use this command in DMs'});
         }
@@ -75,7 +72,7 @@ module.exports = {
             return;
         } else {
         //console.log(check);
-
+        
                 const records = await pdb.records.getFullList('users');
                 await interaction.followUp({content: 'Checking if you are already in the database...', ephemeral: true });
                 let i = 0;
@@ -86,7 +83,7 @@ module.exports = {
                 let count = records.length;
                 // check if user is in the database
                 if (ownerid == userid) {
-                    return await interaction.followUp({ content: 'You are the owner of this server! You should not need links!', ephemeral: true });
+                    await interaction.followUp({ content: 'You are the owner of this server! You should not need links!', ephemeral: true });
                 } else {
                     // check if user is in the database with pocketbase filtering
                     // get count of records in the database
@@ -106,17 +103,10 @@ module.exports = {
                             uses: 0,
                             owner: false
                         });
-                        const nor = await pdb.records.create('repeated', {
-                            userID: `${userid}`,
-                            guildID: `${guildid}`,
-                            link: 'N/A'
-                        })
                         await interaction.followUp({ content: 'Added you to the database!', ephemeral: true });
-                        // run();
                     } else {
                         await interaction.followUp({ content: 'You are already in the database! Getting your info...', ephemeral: true });
                     }
-                    // check if numberofuses is defined
                     console.log(idofuser[0].numberofuses);
                     // get the json data of the links
                     const guildscount = await pdb.records.getFullList('links');
@@ -159,29 +149,13 @@ module.exports = {
                         // send the link to the user
                         await interaction.followUp({ content: `Here is your proxy: ${random} \n This will also be sent in your DMS.`, ephemeral: true });
                         // dm the user the link
-                       return interaction.member.send(`Here is your proxy: ${random} \n Thanks for using the proxy bot!`);
+                       interaction.member.send(`Here is your proxy: ${random} \n Thanks for using the proxy bot!`);
                     } else {
                         await interaction.followUp({ content: 'That proxy does not exist!', ephemeral: true });
                         return;
                     }
                 
                 }
-        }
-    }   
-    catch (error) {
-        console.log(error);
-        if (error.message == 'Cannot read properties of undefined (reading \'numberofuses\')') {
-            console.log('BRU')
     }
 }
-}
-run();
-        } catch (error) {
-            console.log(error);
-            if (error.message == 'Cannot read properties of undefined (reading \'numberofuses\')') {
-                console.log('BRU')
-                // run();
-        }
-        }
     }
-}
