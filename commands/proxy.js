@@ -45,7 +45,7 @@ module.exports = {
 
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     },
     async execute(interaction, args, client) {
@@ -98,7 +98,7 @@ module.exports = {
                     
                         // sort: '-created,title',
                     });
-                    console.log(idofuser);
+                    // console.log(idofuser);
                     if (idofuser.length == 0) {
                         // if user is not in the database, add them
                         await interaction.followUp({ content: 'You are not in the database! Adding you now...', ephemeral: true });
@@ -153,12 +153,12 @@ module.exports = {
                         // get the uses from the database
                         // remove duplicates from the array
                         let unique = [...new Set(link)];
-                        console.log(unique);
+                        // console.log(unique);
                         // get a random link from the array that never needs to be the same
                         let random;
                         function rand() { random = unique[Math.floor(Math.random() * unique.length)]; }
                         rand();
-                        console.log(random);
+                        // console.log(random);
                         // get the number of uses from the database
                         let uses = idofuser[0].numberofuses;
                         if (uses === guild[0].usesallowed) {
@@ -194,11 +194,14 @@ module.exports = {
                         const usedlink = await await pdb.records.getFullList('linkused', parseInt(usedlinkcount.length), {
                             filter: `userID = ${userid} && guildID = ${guildid}`,
                         });
-                        // get the last used link
-                        let lastlink = usedlink[0].link;
+                        // get the last used link from the database with multiple filters
+                        const lastusedlink = await pdb.records.getFullList('linkused', parseInt(usedlinkcount.length), {
+                            filter: `userID = ${userid} && guildID = ${guildid}`,
+                        });
+                        let lastlink = lastusedlink[0].link;
                         if (lastlink === 'none') {
                             // update the used link
-                            const update = await pdb.records.update('linkused', usedlink[0].id, {
+                            const update = await pdb.records.update('linkused', lastusedlink[0].id, {
                                 link: random
                             });
                         } else if (lastlink == random) {
@@ -208,7 +211,7 @@ module.exports = {
                             }
                         } 
                         // update the used link
-                        const updated = await pdb.records.update('linkused', usedlink[0].id, {
+                        const updated = await pdb.records.update('linkused', lastusedlink[0].id, {
                             link: random
                         });
 
