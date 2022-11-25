@@ -1,6 +1,6 @@
 const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook } = require('discord.js');
 
-const { email, password } = require('../config.json');
+const { email, password, url } = require('../config.json');
 const {setTimeout} = require ('timers/promises');
 const fetch = import('node-fetch');
 const axios = require('axios');
@@ -28,7 +28,7 @@ module.exports = {
             let userid = interaction.user.id;
             const focusedValue = interaction.options.getFocused();
             // init db
-            const db = new PocketBase('http://127.0.0.1:8090');
+            const db = new PocketBase(`${url}`);
             const authData = await db.admins.authViaEmail(`${email}`, `${password}`);
             // get the guild id from the command
             const guildscount = await db.records.getFullList('links');
@@ -67,7 +67,7 @@ module.exports = {
             let guildID = interaction.guild.id;
             let userID = interaction.user.id;
             // init db
-            const db = new PocketBase('http://127.0.0.1:8090')
+            const db = new PocketBase(`${url}`)
             const authData = await db.admins.authViaEmail(`${email}`, `${password}`);
             // get the guild id from the command
             const guildscount = await db.records.getFullList('guilds');

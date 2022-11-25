@@ -1,5 +1,5 @@
 const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook, DMChannel, EmbedBuilder  } = require('discord.js');
-const { email, password } = require('../config.json');
+const { email, password, url } = require('../config.json');
 const PocketBase = require('pocketbase/cjs')
 const {setTimeout} = require ('timers/promises');
 
@@ -18,7 +18,7 @@ module.exports = {
         let userid = interaction.user.id;
         const focusedValue = interaction.options.getFocused();
         // init db
-        const db = new PocketBase('http://127.0.0.1:8090');
+        const db = new PocketBase(`${url}`);
         const authData = await db.admins.authViaEmail(`${email}`, `${password}`);
         // get the guild id from the command
         const guildscount = await db.records.getFullList('links');
@@ -65,7 +65,7 @@ module.exports = {
         let nouses;
         // console.log('userid: ' + userid);
         // check if the user is already in the database
-        const pdb = new PocketBase('http://127.0.0.1:8090');
+        const pdb = new PocketBase(`${url}`);
         const authData = await pdb.admins.authViaEmail(`${email}`, `${password}`);
         await interaction.followUp({content: 'Checking if the server is setup...', ephemeral: true});
         const guildscount = await pdb.records.getFullList('guilds');

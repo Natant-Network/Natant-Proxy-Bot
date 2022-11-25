@@ -1,5 +1,5 @@
 const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications } = require('discord.js');
-const { email, password } = require('../config.json');
+const { email, password, url } = require('../config.json');
 // const Keyv = require('keyv');
 // const { host, user, password, datab } = require('../config.json');
 const PocketBase = require('pocketbase/cjs')
@@ -27,7 +27,7 @@ module.exports = {
 		//get user id
 		let userID = interaction.user.id;
 		// GET POCKETBASE DATA TO SEE IF GUILD ALREADY EXISTS
-		const client = new PocketBase('http://127.0.0.1:8090');
+		const client = new PocketBase(`${url}`);
 		// Login to PocketBase
 		const authData = await client.admins.authViaEmail(`${email}`, `${password}`);
 		// Get the guilds data
@@ -58,7 +58,7 @@ module.exports = {
 		// END ITERATION
 		async function pocketbasstart() {
 			// Connect to the database
-			const client = new PocketBase('http://127.0.0.1:8090');
+			const client = new PocketBase(`${url}`);
 			const authData = await client.admins.authViaEmail(`${email}`, `${password}`);
 			// Create a new record for the guild 
 			const newRecord = await client.records.create('guilds', {
