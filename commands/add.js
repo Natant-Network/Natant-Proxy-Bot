@@ -1,6 +1,7 @@
 const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook } = require('discord.js');
 
 const { email, password } = require('../config.json');
+const {setTimeout} = require ('timers/promises');
 const fetch = import('node-fetch');
 const axios = require('axios');
 // const Keyv = require('keyv');

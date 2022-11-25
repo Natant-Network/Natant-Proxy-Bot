@@ -1,6 +1,7 @@
-const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook, DMChannel } = require('discord.js');
+const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook, DMChannel, EmbedBuilder  } = require('discord.js');
 const { email, password } = require('../config.json');
 const PocketBase = require('pocketbase/cjs')
+const {setTimeout} = require ('timers/promises');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -48,8 +49,11 @@ module.exports = {
         }
     },
     async execute(interaction, args, client) {
+        try {
+         await interaction.reply({content: "Getting proxy...", ephemeral: true});
+        async function start() {
         if (!interaction.inGuild()) {
-            return interaction.reply({ content: 'You can\'t use this command in DMs'});
+            return interaction.followUp({ content: 'You can\'t use this command in DMs'});
         }
         // get the user id from the command
         let userid = interaction.user.id;
@@ -58,11 +62,12 @@ module.exports = {
         let ownerid = interaction.guild.ownerId;
         // get the name of the proxy from the command
         let name = interaction.options.getString('name');
+        let nouses;
         // console.log('userid: ' + userid);
         // check if the user is already in the database
         const pdb = new PocketBase('http://127.0.0.1:8090');
         const authData = await pdb.admins.authViaEmail(`${email}`, `${password}`);
-        await interaction.reply({content: 'Checking if the server is setup...', ephemeral: true});
+        await interaction.followUp({content: 'Checking if the server is setup...', ephemeral: true});
         const guildscount = await pdb.records.getFullList('guilds');
         const check = await await pdb.records.getFullList('guilds', parseInt(guildscount.length), {
             filter: `guildID = ${guildid}`,
@@ -88,7 +93,7 @@ module.exports = {
                     // check if user is in the database with pocketbase filtering
                     // get count of records in the database
                     const idofuser = await pdb.records.getFullList('users', parseInt(count), {
-                        filter: `iduser = '${userid}' && idguild = '${guildid}'`,
+                        filter: `iduser = ${userid} && idguild = ${guildid}`,
                         // add a second filter
                     
                         // sort: '-created,title',
@@ -103,11 +108,19 @@ module.exports = {
                             uses: 0,
                             owner: false
                         });
+                        const usedlink = await pdb.records.create('linkused', {
+                            userID: `${userid}`,
+                            guildID: `${guildid}`,
+                            link: 'none',
+                        });
+                        // declare all the variables
                         await interaction.followUp({ content: 'Added you to the database!', ephemeral: true });
+                        return start();
                     } else {
                         await interaction.followUp({ content: 'You are already in the database! Getting your info...', ephemeral: true });
                     }
-                    console.log(idofuser[0].numberofuses);
+                    // await setTimeout(1200);
+                    try {
                     // get the json data of the links
                     const guildscount = await pdb.records.getFullList('links');
                     const links = await await pdb.records.getFullList('links', parseInt(guildscount.length), {
@@ -132,14 +145,25 @@ module.exports = {
                                 link.push(links[0].links[i].link);
                             }
                         }
+                        // get guild data
+                        const guildscount = await pdb.records.getFullList('guilds');
+                        const guild = await await pdb.records.getFullList('guilds', parseInt(guildscount.length), {
+                            filter: `guildID = ${guildid}`,
+                        });
+                        // get the uses from the database
                         // remove duplicates from the array
                         let unique = [...new Set(link)];
                         console.log(unique);
                         // get a random link from the array that never needs to be the same
-                        let random = unique[Math.floor(Math.random() * unique.length)];
+                        let random;
+                        function rand() { random = unique[Math.floor(Math.random() * unique.length)]; }
+                        rand();
                         console.log(random);
                         // get the number of uses from the database
                         let uses = idofuser[0].numberofuses;
+                        if (uses === guild[0].usesallowed) {
+                            return await interaction.followUp({ content: 'You have reached the max uses for this server!', ephemeral: true });
+                        }
                         // add one to the number of uses
                         let newuses = uses + 1;
                         // update the number of uses in the database
@@ -147,15 +171,66 @@ module.exports = {
                             numberofuses: newuses
                         });
                         // send the link to the user
-                        await interaction.followUp({ content: `Here is your proxy: ${random} \n This will also be sent in your DMS.`, ephemeral: true });
+                        // make embed
+                        const embed = new EmbedBuilder() 
+                        .setColor(0x0099FF)
+                        .setTitle('Your Proxy')
+                        // .setURL('https://motortruck1221.tech')
+                        .setAuthor({ name: 'Natant Proxy Bot', url: 'https://github.com/natant-network/proxybot' })
+                        //iconURL: 'https://i.imgur.com/AfFp7pu.png',
+                        .addFields(
+                            { name: 'Proxy', value: `${random}` },
+                            { name: 'Uses', value: `${newuses}/${guild[0].usesallowed}` },
+                            { name: 'Server ID', value: `${guild[0].guildID}` },
+                            { name: 'Thanks for using Natant Proxy Bot!', value: 'If you have any questions, join the support server!' + '\n' + 'https://dsc.gg/natantnetwork' },
+                            // { name: 'Made by', value: 'Natant Network \n And MotorTruck1221#3803' },
+                        )
+                        .setFooter({ text: 'Made by Natant Network \n And MotorTruck1221#3803' })
+                        //.setTimestamp()
+                        .setThumbnail('https://i.imgur.com/AfFp7pu.png')
+                        //.setDescription('Made By MotorTruck1221#3803')
+                        // get used link with pocketbase
+                        const usedlinkcount = await pdb.records.getFullList('linkused');
+                        const usedlink = await await pdb.records.getFullList('linkused', parseInt(usedlinkcount.length), {
+                            filter: `userID = ${userid} && guildID = ${guildid}`,
+                        });
+                        // get the last used link
+                        let lastlink = usedlink[0].link;
+                        if (lastlink === 'none') {
+                            // update the used link
+                            const update = await pdb.records.update('linkused', usedlink[0].id, {
+                                link: random
+                            });
+                        } else if (lastlink == random) {
+                            // if the last link is the same as the new link, get a new link until it is different
+                            while (lastlink == random) {
+                                rand();
+                            }
+                        } 
+                        // update the used link
+                        const updated = await pdb.records.update('linkused', usedlink[0].id, {
+                            link: random
+                        });
+
+                        await interaction.followUp({ embeds: [embed], ephemeral: true });
                         // dm the user the link
-                       interaction.member.send(`Here is your proxy: ${random} \n Thanks for using the proxy bot!`);
+                       interaction.member.send({ embeds: [embed] });
                     } else {
                         await interaction.followUp({ content: 'That proxy does not exist!', ephemeral: true });
                         return;
                     }
                 
+                } catch (error) {
+                    console.log(error);
+                    // if the reason for the error is that numberofuses cannot be read because it is undefined, rerun the function
+                    // start();
                 }
     }
-}
+                }
+        }
+        start(); 
+        } catch (error) {
+            console.log(error);
+        }
+    }
     }
