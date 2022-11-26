@@ -187,7 +187,7 @@ module.exports = {
                         )
                         .setFooter({ text: 'Made by Natant Network \n And MotorTruck1221#3803' })
                         //.setTimestamp()
-                        .setThumbnail('https://i.imgur.com/AfFp7pu.png')
+                        .setThumbnail('https://cdn.discordapp.com/icons/1026932388024037407/bd7eb3195b6f61ea8c90899f761d6d9a.png?size=300')
                         //.setDescription('Made By MotorTruck1221#3803')
                         // get used link with pocketbase
                         const usedlinkcount = await pdb.collection('linkused').getFullList();
