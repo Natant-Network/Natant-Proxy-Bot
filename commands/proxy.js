@@ -19,10 +19,10 @@ module.exports = {
         const focusedValue = interaction.options.getFocused();
         // init db
         const db = new PocketBase(`${url}`);
-        const authData = await db.admins.authViaEmail(`${email}`, `${password}`);
+        const authData = await db.admins.authWithPassword(`${email}`, `${password}`);
         // get the guild id from the command
-        const guildscount = await db.records.getFullList('links');
-        const check = await await db.records.getFullList('links', parseInt(guildscount.length), {
+        const guildscount = await db.collection('links').getFullList();
+        const check = await await db.collection('links').getFullList( parseInt(guildscount.length), {
             filter: `guildID = ${guildid}`,
         });
         // get names of all the links in the json object
@@ -66,10 +66,10 @@ module.exports = {
         // console.log('userid: ' + userid);
         // check if the user is already in the database
         const pdb = new PocketBase(`${url}`);
-        const authData = await pdb.admins.authViaEmail(`${email}`, `${password}`);
+        const authData = await pdb.admins.authWithPassword(`${email}`, `${password}`);
         await interaction.followUp({content: 'Checking if the server is setup...', ephemeral: true});
-        const guildscount = await pdb.records.getFullList('guilds');
-        const check = await await pdb.records.getFullList('guilds', parseInt(guildscount.length), {
+        const guildscount = await pdb.collection('guilds').getFullList();
+        const check = await await pdb.collection('guilds').getFullList(parseInt(guildscount.length), {
             filter: `guildID = ${guildid}`,
         });
         if (check.length == 0) {
@@ -78,7 +78,7 @@ module.exports = {
         } else {
         //console.log(check);
         
-                const records = await pdb.records.getFullList('users');
+                const records = await pdb.collection('users').getFullList();
                 await interaction.followUp({content: 'Checking if you are already in the database...', ephemeral: true });
                 let i = 0;
                 let usercheck = '';
@@ -92,7 +92,7 @@ module.exports = {
                 } else {
                     // check if user is in the database with pocketbase filtering
                     // get count of records in the database
-                    const idofuser = await pdb.records.getFullList('users', parseInt(count), {
+                    const idofuser = await pdb.collection('users').getFullList( parseInt(count), {
                         filter: `iduser = ${userid} && idguild = ${guildid}`,
                         // add a second filter
                     
@@ -102,13 +102,13 @@ module.exports = {
                     if (idofuser.length == 0) {
                         // if user is not in the database, add them
                         await interaction.followUp({ content: 'You are not in the database! Adding you now...', ephemeral: true });
-                        const newrecord = await pdb.records.create('users', {
+                        const newrecord = await pdb.collection('users').create( {
                             iduser: `${userid}`,
                             idguild: `${guildid}`,
                             uses: 0,
                             owner: false
                         });
-                        const usedlink = await pdb.records.create('linkused', {
+                        const usedlink = await pdb.collection('linkused').create( {
                             userID: `${userid}`,
                             guildID: `${guildid}`,
                             link: 'none',
@@ -122,8 +122,8 @@ module.exports = {
                     // await setTimeout(1200);
                     try {
                     // get the json data of the links
-                    const guildscount = await pdb.records.getFullList('links');
-                    const links = await await pdb.records.getFullList('links', parseInt(guildscount.length), {
+                    const guildscount = await pdb.collection('links').getFullList();
+                    const links = await await pdb.collection('links').getFullList(parseInt(guildscount.length), {
                         filter: `guildID = ${guildid}`,
                     });
                     // console.log(links);
@@ -146,8 +146,8 @@ module.exports = {
                             }
                         }
                         // get guild data
-                        const guildscount = await pdb.records.getFullList('guilds');
-                        const guild = await await pdb.records.getFullList('guilds', parseInt(guildscount.length), {
+                        const guildscount = await pdb.collection('guilds').getFullList();
+                        const guild = await await pdb.collection('guilds').getFullList( parseInt(guildscount.length), {
                             filter: `guildID = ${guildid}`,
                         });
                         // get the uses from the database
@@ -167,7 +167,7 @@ module.exports = {
                         // add one to the number of uses
                         let newuses = uses + 1;
                         // update the number of uses in the database
-                        const update = await pdb.records.update('users', idofuser[0].id, {
+                        const update = await pdb.collection('users').update( idofuser[0].id, {
                             numberofuses: newuses
                         });
                         // send the link to the user
@@ -190,18 +190,18 @@ module.exports = {
                         .setThumbnail('https://i.imgur.com/AfFp7pu.png')
                         //.setDescription('Made By MotorTruck1221#3803')
                         // get used link with pocketbase
-                        const usedlinkcount = await pdb.records.getFullList('linkused');
-                        const usedlink = await await pdb.records.getFullList('linkused', parseInt(usedlinkcount.length), {
+                        const usedlinkcount = await pdb.collection('linkused').getFullList();
+                        const usedlink = await await pdb.collection('linkused').getFullList( parseInt(usedlinkcount.length), {
                             filter: `userID = ${userid} && guildID = ${guildid}`,
                         });
                         // get the last used link from the database with multiple filters
-                        const lastusedlink = await pdb.records.getFullList('linkused', parseInt(usedlinkcount.length), {
+                        const lastusedlink = await pdb.collection('linkused').getFullList( parseInt(usedlinkcount.length), {
                             filter: `userID = ${userid} && guildID = ${guildid}`,
                         });
                         let lastlink = lastusedlink[0].link;
                         if (lastlink === 'none') {
                             // update the used link
-                            const update = await pdb.records.update('linkused', lastusedlink[0].id, {
+                            const update = await pdb.collection('linkused').update( lastusedlink[0].id, {
                                 link: random
                             });
                         } else if (lastlink == random) {
@@ -211,7 +211,7 @@ module.exports = {
                             }
                         } 
                         // update the used link
-                        const updated = await pdb.records.update('linkused', lastusedlink[0].id, {
+                        const updated = await pdb.collection('linkused').update( lastusedlink[0].id, {
                             link: random
                         });
 

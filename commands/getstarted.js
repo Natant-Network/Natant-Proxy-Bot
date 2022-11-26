@@ -29,9 +29,9 @@ module.exports = {
 		// GET POCKETBASE DATA TO SEE IF GUILD ALREADY EXISTS
 		const client = new PocketBase(`${url}`);
 		// Login to PocketBase
-		const authData = await client.admins.authViaEmail(`${email}`, `${password}`);
+		const authData = await client.admins.authWithPassword(`${email}`, `${password}`);
 		// Get the guilds data
-		const records = await client.records.getFullList('guilds');
+		const records = await client.collection('guilds').getFullList();
 		// Get how many guilds there are
 		let guilds = records.length;
 		// Get the guildid data from the database to see if it exists already will later be populated
@@ -59,9 +59,9 @@ module.exports = {
 		async function pocketbasstart() {
 			// Connect to the database
 			const client = new PocketBase(`${url}`);
-			const authData = await client.admins.authViaEmail(`${email}`, `${password}`);
+			const authData = await client.admins.authWithPassword(`${email}`, `${password}`);
 			// Create a new record for the guild 
-			const newRecord = await client.records.create('guilds', {
+			const newRecord = await client.collection('guilds').create( {
 				guildID: guildID,
 				roleIDs: roles,
 				premium: 'yes',
@@ -69,14 +69,14 @@ module.exports = {
 				usesallowed: usesv,
 			});
 			// Create a new record for the user
-			const newUser = await client.records.create('users', {
+			const newUser = await client.collection('users').create( {
 				iduser: userID,
 				idguild: guildID,
 				numberofuses: 0,
 				owner: true,
 			});
 			// Create a new record for the base link
-			const newBase = await client.records.create('links', {
+			const newBase = await client.collection('links').create( {
 				guildID: guildID,
 				// set baselink with json
 				links:  [ {

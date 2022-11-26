@@ -29,10 +29,10 @@ module.exports = {
             const focusedValue = interaction.options.getFocused();
             // init db
             const db = new PocketBase(`${url}`);
-            const authData = await db.admins.authViaEmail(`${email}`, `${password}`);
+            const authData = await db.admins.authWithPassword(`${email}`, `${password}`);
             // get the guild id from the command
-            const guildscount = await db.records.getFullList('links');
-            const check = await await db.records.getFullList('links', parseInt(guildscount.length), {
+            const guildscount = await db.collection('links').getFullList();
+            const check = await await db.collection('links').getFullList(parseInt(guildscount.length), {
                 filter: `guildID = ${guildid}`,
             });
             // check if the guild is in the database
@@ -68,10 +68,10 @@ module.exports = {
             let userID = interaction.user.id;
             // init db
             const db = new PocketBase(`${url}`)
-            const authData = await db.admins.authViaEmail(`${email}`, `${password}`);
+            const authData = await db.admins.authWithPassword(`${email}`, `${password}`);
             // get the guild id from the command
-            const guildscount = await db.records.getFullList('guilds');
-            const check = await await db.records.getFullList('guilds', parseInt(guildscount.length), {
+            const guildscount = await db.collection('guilds').getFullList();
+            const check = await await db.collection('guilds').getFullList( parseInt(guildscount.length), {
                 filter: `guildID = ${guildID}`,
             });
             // get the role id from the database
@@ -99,13 +99,39 @@ module.exports = {
                     interaction.followUp({ content: 'Checking if the link is valid...', ephemeral: true });
                     await axios.get(`${link}`);
                     interaction.followUp({ content: 'The link is valid!', ephemeral: true });
+                    // check if the link is a duplicate
+                    const guildscount = await db.collection('links').getFullList();
+                    const check = await await db.collection('links').getFullList(parseInt(guildscount.length), {
+                        filter: `guildID = ${guildID}`,
+                    });
+                    // get names of all links in the database json
+                    // get names of all the links in the json object
+                    let linknames = [];
+                    for (let i = 0; i < check[0].links.length; i++) {
+                        linknames.push(check[0].links[i].name);
+                    }
+                    // filter out duplicate names
+                    let unique = [...new Set(linknames)];
+                    // remove base from the array
+                    unique.splice(unique.indexOf('base'), 1);
+                    // get all links in the database
+                    let links = [];
+                    for (let i = 0; i < check[0].links.length; i++) {
+                        links.push(check[0].links[i].link);
+                    }
+                    console.log(links);
+                    // if the link is in the list of links
+                    if (links.includes(link)) {
+                        interaction.followUp({ content: 'The link is already in the database!', ephemeral: true });
+                        return;
+                    }
                 } catch (error) {
                     interaction.followUp({ content: 'The link you provided is not valid', ephemeral: true });
                     return;
                 }
                 // get the links from the database
-                const guildscount = await db.records.getFullList('links');
-                const check = await await db.records.getFullList('links', parseInt(guildscount.length), {
+                const guildscount = await db.collection('links').getFullList();
+                const check = await await db.collection('links').getFullList(parseInt(guildscount.length), {
                     filter: `guildID = ${guildID}`,
                 });
                 let linknum = check[0].links.length;
@@ -145,7 +171,7 @@ module.exports = {
                 // add the new link to the json object
                 oldjson.push({ id: linknumber - 1 , name: namel, link: link });
                 // update the database
-                const update = await db.records.update('links', id, {
+                const update = await db.collection('links').update( id, {
                     links: oldjson,
                 });
                 interaction.followUp({ content: 'The link(s) have been added to the database', ephemeral: true });
