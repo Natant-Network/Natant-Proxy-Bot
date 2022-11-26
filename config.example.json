@@ -4,5 +4,9 @@
     "token": "djstoken",
     "email": "email",
     "password": "password",
-    "url": "url"
+    "url": "url",
+    "status": "watching, playing, listening, streaming",
+    "game": [
+        // an array of games to cycle through
+    ]
 }

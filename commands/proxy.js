@@ -1,4 +1,4 @@
-const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook, DMChannel, EmbedBuilder  } = require('discord.js');
+const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications, InteractionWebhook, DMChannel, EmbedBuilder, ReactionUserManager  } = require('discord.js');
 const { email, password, url } = require('../config.json');
 const PocketBase = require('pocketbase/cjs')
 const {setTimeout} = require ('timers/promises');
@@ -25,6 +25,9 @@ module.exports = {
         const check = await await db.collection('links').getFullList( parseInt(guildscount.length), {
             filter: `guildID = ${guildid}`,
         });
+        if (check.length == 0) {
+            return;
+        }
         // get names of all the links in the json object
         let linknames = [];
         for (let i = 0; i < check[0].links.length; i++) {
@@ -50,7 +53,7 @@ module.exports = {
     },
     async execute(interaction, args, client) {
         try {
-         await interaction.reply({content: "Getting proxy...", ephemeral: true});
+            await interaction.reply({content: "Getting proxy...", ephemeral: true});
         async function start() {
         if (!interaction.inGuild()) {
             return interaction.followUp({ content: 'You can\'t use this command in DMs'});
@@ -199,6 +202,13 @@ module.exports = {
                             filter: `userID = ${userid} && guildID = ${guildid}`,
                         });
                         let lastlink = lastusedlink[0].link;
+                        // if the link numbers are less than 0, set the last link used to none
+                        if (lastlink < 0) {
+                            // set the lastlink to none with pocketbase
+                            const update = await pdb.collection('linkused').update( usedlink[0].id, {
+                                link: 'none',
+                            });
+                        }
                         if (lastlink === 'none') {
                             // update the used link
                             const update = await pdb.collection('linkused').update( lastusedlink[0].id, {
@@ -214,10 +224,17 @@ module.exports = {
                         const updated = await pdb.collection('linkused').update( lastusedlink[0].id, {
                             link: random
                         });
-
-                        await interaction.followUp({ embeds: [embed], ephemeral: true });
-                        // dm the user the link
-                       interaction.member.send({ embeds: [embed] });
+                                interaction.member.send({ embeds: [embed] }).then(async () => {
+                                        await interaction.followUp({ embeds: [embed], ephemeral: true });
+                                    }).catch(async (error) => {
+                                        await pdb.collection('users').update( idofuser[0].id, {numberofuses: newuses - 1});
+                                        // remove used link
+                                        const update = await pdb.collection('linkused').update( lastusedlink[0].id, {
+                                            link: 'none'
+                                        });
+                                        await interaction.followUp({ content: 'I was unable to DM you the link! Please make sure your DMs are open!', ephemeral: true });
+                                        return;
+                            });
                     } else {
                         await interaction.followUp({ content: 'That proxy does not exist!', ephemeral: true });
                         return;

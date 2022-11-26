@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Events, GatewayIntentBits, Collection, ActivityType } = require('discord.js');
-const { token, prefix } = require('./config.json');
+const { token, prefix, status, game } = require('./config.json');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages] });
@@ -69,7 +69,9 @@ client.on(Events.InteractionCreate, async interaction => {
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
-	const activities = ['The Support Server!', 'Weeb Network', `${client.guilds.cache.size} SERVER(S), Beta v1.0.0 Released!`];
+	game.push(`${client.guilds.cache.size} servers`);
+	const activities = game;
+	//console.log(game)
 	const updateDelay = 5; // in seconds
   	let currentIndex = 0;
 	  setInterval(() => {

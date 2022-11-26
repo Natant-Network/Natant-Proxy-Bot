@@ -32,9 +32,13 @@ module.exports = {
             const authData = await db.admins.authWithPassword(`${email}`, `${password}`);
             // get the guild id from the command
             const guildscount = await db.collection('links').getFullList();
+            const guildc = await db.collection('guilds').getFullList();
             const check = await await db.collection('links').getFullList(parseInt(guildscount.length), {
                 filter: `guildID = ${guildid}`,
             });
+            if (guildc.length == 0) {
+                return;
+            }
             // check if the guild is in the database
             // get names of all links in the database json
             // get names of all the links in the json object
@@ -62,13 +66,17 @@ module.exports = {
             if (!interaction.inGuild()) {
                 return interaction.reply({ content: 'You can\'t use this command in DMs'});
             }
-            try { 
-            interaction.reply({ content: 'Checking if you have the required role...', ephemeral: true });
+            try {
+                const db = new PocketBase(`${url}`)
+                const authData = await db.admins.authWithPassword(`${email}`, `${password}`);
+                const g = await db.collection('guilds').getFullList();
+                if (g.length == 0) {
+                    return await interaction.reply({ content: 'This server isn\'t setup! Contact the server owner to run /get-started', ephemeral: true });
+                }
+            await interaction.reply({ content: 'Checking if you have the required role...', ephemeral: true });
             let guildID = interaction.guild.id;
             let userID = interaction.user.id;
             // init db
-            const db = new PocketBase(`${url}`)
-            const authData = await db.admins.authWithPassword(`${email}`, `${password}`);
             // get the guild id from the command
             const guildscount = await db.collection('guilds').getFullList();
             const check = await await db.collection('guilds').getFullList( parseInt(guildscount.length), {
