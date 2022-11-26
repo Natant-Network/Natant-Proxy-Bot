@@ -69,7 +69,7 @@ client.on(Events.InteractionCreate, async interaction => {
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
-	const activities = ['The Support Server!', 'Weeb Network', `${client.guilds.cache.size} SERVER(S)`];
+	const activities = ['The Support Server!', 'Weeb Network', `${client.guilds.cache.size} SERVER(S), Beta v1.0.0 Released!`];
 	const updateDelay = 5; // in seconds
   	let currentIndex = 0;
 	  setInterval(() => {
