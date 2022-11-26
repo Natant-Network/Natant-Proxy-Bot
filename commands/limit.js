@@ -8,7 +8,7 @@ module.exports = {
         let embed = new EmbedBuilder();
         embed.setTitle('Limit');
         //embed.setDescription('This command is currently under development');
-        embed.addFieldset({
+        embed.addFields({
             name: 'Under Development',
             value: 'This command is currently under development',
             inline: false
