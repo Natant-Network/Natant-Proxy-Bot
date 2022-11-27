@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Natant-Network/ProxyBot.git"
+    "url": "git+https://github.com/Natant-Network/Natant-Proxy-Bot.git"
   },
   "keywords": [
     "Proxy",
@@ -18,9 +18,9 @@
   "author": "MotorTruck1221",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Natant-Network/ProxyBot/issues"
+    "url": "https://github.com/Natant-Network/Natant-Proxy-Bot/issues"
   },
-  "homepage": "https://github.com/Natant-Network/ProxyBot#readme",
+  "homepage": "https://github.com/Natant-Network/Natant-Proxy-Bot#readme",
   "dependencies": {
     "@keyv/mysql": "^1.4.2",
     "axios": "^1.1.3",
