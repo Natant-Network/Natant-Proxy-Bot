@@ -8,5 +8,6 @@
     "status": "watching, playing, listening, streaming",
     "game": [
         // an array of games to cycle through
-    ]
+    ],
+    "port": //your port
 }
