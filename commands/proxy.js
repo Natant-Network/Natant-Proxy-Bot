@@ -161,7 +161,6 @@ module.exports = {
                         let random;
                         function rand() { random = unique[Math.floor(Math.random() * unique.length)]; }
                         rand();
-                        // console.log(random);
                         // get the number of uses from the database
                         let uses = idofuser[0].numberofuses;
                         if (uses === guild[0].usesallowed) {
@@ -203,11 +202,21 @@ module.exports = {
                         });
                         let lastlink = lastusedlink[0].link;
                         // if the link numbers are less than 0, set the last link used to none
-                        if (lastlink < 0) {
+                        // if (link.length > 1) {
+                        //     // set the lastlink to none with pocketbase
+                        //     const update = await pdb.collection('linkused').update( usedlink[0].id, {
+                        //         link: 'none',
+                        //     });
+                        // }
+                        // console.log('link')
+                        // console.log(link.length)
+                        // if link.length is 1, set the last link to none
+                        console.log('link')
+                        console.log(link.length)
+                        if (link.length == 1) {
                             // set the lastlink to none with pocketbase
-                            const update = await pdb.collection('linkused').update( usedlink[0].id, {
-                                link: 'none',
-                            });
+                            link = 'none';
+                            rand();
                         }
                         if (lastlink === 'none') {
                             // update the used link
