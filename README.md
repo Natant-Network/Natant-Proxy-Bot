@@ -1,4 +1,4 @@
-# Natant Proxy Bot
+# Link Master
 
 This is a Mutli Server Discord Bot. 
 
