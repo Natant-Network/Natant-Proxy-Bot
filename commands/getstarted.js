@@ -20,6 +20,7 @@ module.exports = {
 		let roles = '';
 		// Get the Guild ID
 		let guildID = interaction.guild.id;
+		let guildname = interaction.guild.name;
         // Discord Invite this wil be later populated with the invite link
 		let dinvv = '';
 		// Amount of uses a user can use /proxy before they cannot access more links (per month) this will be later populated.
@@ -63,6 +64,7 @@ module.exports = {
 			// Create a new record for the guild 
 			const newRecord = await client.collection('guilds').create( {
 				guildID: guildID,
+				guildName: guildname,
 				roleIDs: roles,
 				premium: 'yes',
 				invite: dinvv,

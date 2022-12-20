@@ -143,9 +143,14 @@ module.exports = {
                         await interaction.followUp({ content: 'Getting your proxy...', ephemeral: true });
                         // get the links from the json object based off of the name
                         let link = [];
+                        let extra;
                         for (let i = 0; i < links[0].links.length; i++) {
                             if (links[0].links[i].name == name) {
                                 link.push(links[0].links[i].link);
+                                extra = links[0].links[i].extra;
+                                if (extra === 'none') {
+                                    extra = 'It looks like this proxy does not have any extra info!'
+                                }
                             }
                         }
                         // get guild data
@@ -184,6 +189,8 @@ module.exports = {
                             { name: 'Proxy', value: `${random}` },
                             { name: 'Uses', value: `${newuses}/${guild[0].usesallowed}` },
                             { name: 'Server ID', value: `${guild[0].guildID}` },
+                            { name: 'Server Name', value: `${guild[0].guildName}` },
+                            { name: 'Extra', value: `${extra}` },
                             { name: 'Thanks for using Natant Proxy Bot!', value: 'If you have any questions, join the support server!' + '\n' + 'https://dsc.gg/natantnetwork' },
                             // { name: 'Made by', value: 'Natant Network \n And MotorTruck1221#3803' },
                         )

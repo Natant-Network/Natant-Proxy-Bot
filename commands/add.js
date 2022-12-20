@@ -21,7 +21,11 @@ module.exports = {
         .addStringOption(option =>
             option.setName('link')
             .setDescription('Link to add to the database')
-            .setRequired(true)),
+            .setRequired(true))
+        .addStringOption(option =>
+            option.setName('extra-field')
+            .setDescription('Extra field for any info you might want to add')
+            .setRequired(false)),
         async autocomplete (interaction) {
             try {
             let guildid = interaction.guild.id;
@@ -95,6 +99,7 @@ module.exports = {
                 let name = interaction.options.getString('name');
                 let namel = name.toLowerCase();
                 let link = interaction.options.getString('link');
+                let extra = interaction.options.getString('extra-field');
                 if (link.includes(' ')) {
                     interaction.followUp({ content: 'The link you provided cannot contain spaces', ephemeral: true });
                     return;
@@ -177,7 +182,10 @@ module.exports = {
                 // get the old json object
                 let oldjson = check[0].links;
                 // add the new link to the json object
-                oldjson.push({ id: linknumber - 1 , name: namel, link: link });
+                if (extra == null) {
+                    extra = 'none';
+                }
+                oldjson.push({ id: linknumber - 1 , name: namel, link: link, extra: extra });
                 // update the database
                 const update = await db.collection('links').update( id, {
                     links: oldjson,
