@@ -14,7 +14,7 @@ module.exports = {
 		let ownerid = interaction.guild.ownerId;
 		let botowner = interaction.user.id;
 		let userid = interaction.user.id;
-		if (ownerid !== userid || botowner != parseInt(ownerID)) {
+		if (ownerid !== userid) {
 			return interaction.reply({ content: 'You are not the owner of this server!', ephemeral: true });
 		}
 		// ROLES later this gets populated with the roles allowed for /reset-users
