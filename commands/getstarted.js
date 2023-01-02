@@ -12,9 +12,9 @@ module.exports = {
 			return interaction.reply({ content: 'You can\'t use this command in DMs'});
 		}
 		let ownerid = interaction.guild.ownerId;
-		let botowner = ownerID
+		let botowner = interaction.user.id;
 		let userid = interaction.user.id;
-		if (ownerid !== userid) {
+		if (ownerid !== userid || botowner != ownerID ) {
 			return interaction.reply({ content: 'You are not the owner of this server!', ephemeral: true });
 		}
 		// ROLES later this gets populated with the roles allowed for /reset-users
