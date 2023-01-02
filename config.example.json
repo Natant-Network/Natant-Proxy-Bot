@@ -5,6 +5,7 @@
     "email": "email",
     "password": "password",
     "url": "url",
+    "ownerID": "id of owner",
     "status": "watching, playing, listening, streaming",
     "game": [
         // an array of games to cycle through

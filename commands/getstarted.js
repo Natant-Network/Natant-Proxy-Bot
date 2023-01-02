@@ -1,5 +1,5 @@
 const { Message, SlashCommandBuilder, GuildDefaultMessageNotifications } = require('discord.js');
-const { email, password, url } = require('../config.json');
+const { email, password, url, ownerID } = require('../config.json');
 // const Keyv = require('keyv');
 // const { host, user, password, datab } = require('../config.json');
 const PocketBase = require('pocketbase/cjs')
@@ -12,6 +12,7 @@ module.exports = {
 			return interaction.reply({ content: 'You can\'t use this command in DMs'});
 		}
 		let ownerid = interaction.guild.ownerId;
+		let botowner = ownerID
 		let userid = interaction.user.id;
 		if (ownerid !== userid) {
 			return interaction.reply({ content: 'You are not the owner of this server!', ephemeral: true });
