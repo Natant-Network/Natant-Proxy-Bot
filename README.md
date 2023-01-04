@@ -42,7 +42,7 @@ AND MORE COMING SOON!
 
 ## Support
 
-If you need help with the bot, join the support server [here](https://dsc.gg/natant-network) and open a ticket.
+If you need help with the bot, join the support server [here](https://dsc.gg/ruby-network) and open a ticket.
 
 ## Invite
 
