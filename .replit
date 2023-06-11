@@ -1,0 +1,12 @@
+run = ["yarn", "start"]
+
+[nix]
+channel = "stable-22_11"
+
+[languages]
+
+[languages.typescript]
+pattern = "**/{*.ts,*.js,*.tsx,*.jsx}"
+
+[languages.typescript.languageServer]
+start = "typescript-language-server --stdio"
