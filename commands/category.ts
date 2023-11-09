@@ -3,29 +3,30 @@ import {
   AutocompleteInteraction,
   SlashCommandBuilder,
   EmbedBuilder,
-} from 'discord.js';
-import guildModel from '../schema/guild';
+} from "discord.js";
+import { guildModel } from "../lib/schema.ts";
+import { ClientMessages } from "../lib/messages.ts";
 
 export const data = new SlashCommandBuilder()
-  .setName('category')
-  .setDescription('Add / remove a category')
-  .setDefaultMemberPermissions('8')
+  .setName("category")
+  .setDescription("Add / remove a category")
+  .setDefaultMemberPermissions("8")
   .setDMPermission(false)
   .addSubcommand(command => command
-    .setName('add')
-    .setDescription('Add a category')
+    .setName("add")
+    .setDescription("Add a category")
     .addStringOption(option => option
-      .setName('category')
-      .setDescription('The category to add')
+      .setName("category")
+      .setDescription("The category to add")
       .setRequired(true)
     )
   )
   .addSubcommand(command => command
-    .setName('remove')
-    .setDescription('Remove a category')
+    .setName("remove")
+    .setDescription("Remove a category")
     .addStringOption(option => option
-    .setName('category')
-      .setDescription('The category to remove')
+      .setName("category")
+      .setDescription("The category to remove")
       .setRequired(true)
       .setAutocomplete(true)
     )
@@ -33,28 +34,28 @@ export const data = new SlashCommandBuilder()
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
   try {
-    const category = interaction.options.getString('category', true);
+    const category = interaction.options.getString("category", true);
     const doc = await guildModel.findOne({
       GuildId: interaction.guild?.id
     });
-    if(!doc) return interaction.reply({
-        content: client.messages.get('ERR_SERVER_NOT_FOUND_ADMIN'),
-        ephemeral: true,
+    if (!doc) return interaction.reply({
+      content: ClientMessages.ERR_SERVER_NOT_FOUND_ADMIN,
+      ephemeral: true,
     });
     const subcommand: string = interaction.options.getSubcommand();
 
-    if (subcommand == 'add') {
-      if(category.length > 20) return interaction.reply({
+    if (subcommand == "add") {
+      if (category.length > 20) return interaction.reply({
         content: `Max character count for a category is 20 (got ${category.length})!`,
         ephemeral: true
       });
       doc.types.push(category);
       await doc.save();
       const embed = new EmbedBuilder()
-      .setDescription(`✅ Added category \`${category}\``);
+        .setDescription(`✅ Added category \`${category}\``);
       interaction.reply({ embeds: [embed], ephemeral: true });
-    } else if (subcommand == 'remove') {
-      if(!doc.types.includes(category)) return interaction.reply({
+    } else if (subcommand == "remove") {
+      if (!doc.types.includes(category)) return interaction.reply({
         content: `Invalid category \`${category}\``,
         ephemeral: true,
       });

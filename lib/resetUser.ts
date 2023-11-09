@@ -1,4 +1,4 @@
-import userModel from '../schema/user';
+import { userModel } from "./schema.ts";
 
 export default async function resetUser(UserId: string, GuildId: string) {
   const doc: any = await userModel.findOne({ UserId });

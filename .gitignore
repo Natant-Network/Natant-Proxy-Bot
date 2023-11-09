@@ -1,2 +1,4 @@
 node_modules
 replit* # dev env
+log.log
+dist

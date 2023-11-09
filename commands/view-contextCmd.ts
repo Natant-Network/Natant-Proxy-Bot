@@ -1,8 +1,8 @@
-import { UserContextMenuCommandInteraction, ContextMenuCommandBuilder, ApplicationCommandType } from 'discord.js';
-import viewUser from '../lib/viewUser';
+import { UserContextMenuCommandInteraction, ContextMenuCommandBuilder, ApplicationCommandType } from "discord.js";
+import viewUser from "../lib/viewUser.ts";
 
 export const data = new ContextMenuCommandBuilder()
-  .setName('View Usage')
+  .setName("View Usage")
   .setType(ApplicationCommandType.User)
   .setDefaultMemberPermissions(8)
   .setDMPermission(false);

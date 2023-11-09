@@ -2,24 +2,25 @@ import {
   ChatInputCommandInteraction,
   AutocompleteInteraction,
   SlashCommandBuilder
-} from 'discord.js';
-import guildModel from '../schema/guild';
-import { getProxy, ProxyError } from '../lib/proxy';
+} from "discord.js";
+import { guildModel } from "../lib/schema.ts";
+import { getProxy, ProxyError } from "../lib/proxy.ts";
+import { ClientMessages } from "../lib/messages.ts";
 
 export const data = new SlashCommandBuilder()
-  .setName('proxy')
-  .setDescription('Get a random proxy link from a selected category')
+  .setName("proxy")
+  .setDescription("Get a random proxy link from a selected category")
   .setDMPermission(false)
   .addStringOption(option =>
     option
-      .setName('category')
-      .setDescription('The category to get a proxy link from')
+      .setName("category")
+      .setDescription("The category to get a proxy link from")
       .setAutocomplete(true)
       .setRequired(true)
   );
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
-  const category = interaction.options.getString('category', true);
+  const category = interaction.options.getString("category", true);
   await interaction.deferReply({ ephemeral: true }); // defer reply
   var data;
   try {
@@ -30,9 +31,9 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
   if(data.dm) {
     try {
       await interaction.user.send(data.data);
-      return interaction.editReply({ content: client.messages.get('MSG_CHECK_DMS') });
+      return interaction.editReply({ content: ClientMessages.MSG_CHECK_DMS });
     } catch {
-      data.data.content = client.messages.get('ERR_FAILED_DM');
+      data.data.content = ClientMessages.ERR_FAILED_DM;
     }
   }
   interaction.editReply(data.data);

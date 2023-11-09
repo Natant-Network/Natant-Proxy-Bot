@@ -3,36 +3,37 @@ import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
   AutocompleteInteraction
-} from 'discord.js';
-import guildModel from '../schema/guild';
-import type { GuildLink } from '../types';
+} from "discord.js";
+import { guildModel } from "../lib/schema.ts";
+import type { GuildLink } from "../lib/types.ts";
+import { ClientMessages } from "../lib/messages.ts";
 
 export const data = new SlashCommandBuilder()
-  .setName('link')
-  .setDescription('Add / remove a link')
-  .setDefaultMemberPermissions('8')
+  .setName("link")
+  .setDescription("Add / remove a link")
+  .setDefaultMemberPermissions("8")
   .setDMPermission(false)
   .addSubcommand(command => command
-    .setName('add')
-    .setDescription('Add a link')
+    .setName("add")
+    .setDescription("Add a link")
     .addStringOption(option => option
-      .setName('category')
-      .setDescription('The category to add the link to')
+      .setName("category")
+      .setDescription("The category to add the link to")
       .setRequired(true)
       .setAutocomplete(true)
     )
     .addStringOption(option => option
-      .setName('link')
-      .setDescription('The link to add')
+      .setName("link")
+      .setDescription("The link to add")
       .setRequired(true)
     )
   )
   .addSubcommand(command => command
-    .setName('remove')
-    .setDescription('Remove a link')
+    .setName("remove")
+    .setDescription("Remove a link")
     .addStringOption(option => option
-      .setName('link')
-      .setDescription('The link to remove')
+      .setName("link")
+      .setDescription("The link to remove")
       .setRequired(true)
       .setAutocomplete(true)
     )
@@ -40,19 +41,18 @@ export const data = new SlashCommandBuilder()
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
   try {
-    // @ts-ignore
-    const category: string = interaction.options.getString('category');
-    const link: string = interaction.options.getString('link', true);
+    const category: string = interaction.options.getString("category", true);
+    const link: string = interaction.options.getString("link", true);
     const doc = await guildModel.findOne({
       GuildId: interaction.guild?.id
     });
     if(!doc) return interaction.reply({
-      content: client.messages.get('ERR_SERVER_NOT_FOUND_ADMIN'),
+      content: ClientMessages.ERR_SERVER_NOT_FOUND_ADMIN,
       ephemeral: true
     });
     const subcommand: string = interaction.options.getSubcommand();
 
-    if(subcommand == 'add') {
+    if(subcommand == "add") {
       if(!doc.types.includes(category)) return interaction.reply({
         content: `Invalid category \`${category}\``,
         ephemeral: true
@@ -72,7 +72,7 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
       const embed = new EmbedBuilder()
         .setDescription(`✅ Added link \`${link}\` to category \`${category}\``)
       interaction.reply({ embeds: [embed], ephemeral: true });
-    } else if(subcommand == 'remove') {
+    } else if(subcommand == "remove") {
       const i: number = findIndex(doc.links, {
         type: category,
         domain: link
@@ -93,9 +93,9 @@ export async function autocomplete(client: any, interaction: AutocompleteInterac
   if(!doc) return interaction.respond([]);
   const input = interaction.options.getFocused(true);
   var data: string[] = [];
-  if(input.name == 'link') {
+  if(input.name == "link") {
     data = doc.links.map(link => link.domain).filter(domain => domain.startsWith(input.value));
-  } else if(input.name == 'category') {
+  } else if(input.name == "category") {
     data = doc.types.filter(type => type.startsWith(input.value));
   }
   interaction.respond(

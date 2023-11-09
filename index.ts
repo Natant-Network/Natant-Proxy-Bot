@@ -1,25 +1,22 @@
-// DiscordJS
-import { GatewayIntentBits } from 'discord.js';
-import Client from './Client';
+import "dotenv/config";
 
-// Types
-import type { DiscordClient } from './types';
+import { Client, GatewayIntentBits, Collection } from "discord.js";
 
-// Libraries
-import mongoose from 'mongoose';
-import * as winston from 'winston';
+import { loadEventHandlers } from "./events/index.ts";
+import { loadSlashCommands } from "./commands/index.ts";
 
-// Config
-import * as denv from 'dotenv';
-denv.config();
+import type { DiscordClient, SlashCommand } from "./lib/types.ts";
+
+import mongoose from "mongoose";
+import * as winston from "winston";
 
 const logger = winston.createLogger({
-  level: 'debug',
+  level: "debug",
   format: winston.format.simple(),
   transports: [
     new winston.transports.File({
-      filename: 'log.log',
-      level: 'info'
+      filename: "log.log",
+      level: "info"
     }),
     new winston.transports.Console()
   ]
@@ -27,21 +24,23 @@ const logger = winston.createLogger({
 
 // We want GuildMessages to tell the users who try to use message commands
 // that we do not use them
-const client: DiscordClient = new Client({
+const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
-});
+}) as DiscordClient;
 client.logger = logger;
-client.loadEventHandlers();
-client.loadSlashCommands();
+client.commands = new Collection<String, SlashCommand>();
 
-mongoose.connect(process.env.MONGODB_URI || '').then(() => logger.log({
-  level: 'info',
-  message: 'MongoDB connected'
+loadEventHandlers(client);
+loadSlashCommands(client);
+
+mongoose.connect(process.env.MONGODB_URI || "").then(() => logger.log({
+  level: "info",
+  message: "MongoDB connected"
 })).catch(err => {
   console.log(err);
   logger.log({
-    level: 'error',
-    message: 'Failed to connect to MongoDB'
+    level: "error",
+    message: "Failed to connect to MongoDB"
   });
 });
 

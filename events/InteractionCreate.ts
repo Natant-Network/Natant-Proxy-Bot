@@ -1,9 +1,10 @@
-import { Events, BaseInteraction } from 'discord.js';
-import type { SlashCommand, DiscordClient } from '../types';
-import { getProxy, ProxyError } from '../lib/proxy';
+import { Events, BaseInteraction } from "discord.js";
+import type { SlashCommand, DiscordClient } from "../lib/types.ts";
+import { getProxy, ProxyError } from "../lib/proxy.ts";
+import { ClientMessages } from "../lib/messages.ts";
 
 // If you change this, make sure to also change it in commands/panel.ts
-const proxyButtonPrefix = '$LM_TYPE$:';
+const proxyButtonPrefix = "$LM_TYPE$:";
 
 export default function registerHandler(client: DiscordClient) {
   const { logger } = client;
@@ -73,9 +74,9 @@ async function handleButton(client: DiscordClient, interaction: any) {
     if (data.dm) {
       try {
         await interaction.user.send(data.data);
-        return interaction.editReply({ content: client.messages.get('MSG_CHECK_DMS') });
+        return interaction.editReply({ content: ClientMessages.MSG_CHECK_DMS });
       } catch {
-        data.data.content = client.messages.get('ERR_FAILED_DM');
+        data.data.content = ClientMessages.ERR_FAILED_DM;
       }
     }
     interaction.editReply(data.data);

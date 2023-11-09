@@ -1,5 +1,5 @@
-import { Events, EmbedBuilder } from 'discord.js';
-import type { DiscordClient } from '../types';
+import { Events, EmbedBuilder } from "discord.js";
+import type { DiscordClient } from "../lib/types.ts";
 
 export default function registerHandler(client: DiscordClient) {
   client.on(Events.MessageCreate, message => {
