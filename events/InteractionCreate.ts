@@ -1,7 +1,7 @@
 import { Events, BaseInteraction } from "discord.js";
-import type { SlashCommand, DiscordClient } from "../lib/types.ts";
-import { getProxy, ProxyError } from "../lib/proxy.ts";
-import { ClientMessages } from "../lib/messages.ts";
+import type { SlashCommand, DiscordClient } from "../lib/types.js";
+import { getProxy, ProxyError } from "../lib/proxy.js";
+import { ClientMessages } from "../lib/messages.js";
 
 // If you change this, make sure to also change it in commands/panel.ts
 const proxyButtonPrefix = "$LM_TYPE$:";

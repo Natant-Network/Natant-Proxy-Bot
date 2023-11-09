@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, ContextMenuCommandBuilder, EmbedBuilder } from "discord.js";
-import type { SlashCommand } from "../lib/types.ts";
+import type { SlashCommand } from "../lib/types.js";
 
 export const data = new SlashCommandBuilder()
   .setName("help")

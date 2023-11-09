@@ -2,10 +2,10 @@ import "dotenv/config";
 
 import { Client, GatewayIntentBits, Collection } from "discord.js";
 
-import { loadEventHandlers } from "./events/index.ts";
-import { loadSlashCommands } from "./commands/index.ts";
+import { loadEventHandlers } from "./events/index.js";
+import { loadSlashCommands } from "./commands/index.js";
 
-import type { DiscordClient, SlashCommand } from "./lib/types.ts";
+import type { DiscordClient, SlashCommand } from "./lib/types.js";
 
 import mongoose from "mongoose";
 import * as winston from "winston";

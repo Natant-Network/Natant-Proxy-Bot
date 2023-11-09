@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import resetUser from "../lib/resetUser.ts";
-import { userModel } from "../lib/schema.ts";
+import resetUser from "../lib/resetUser.js";
+import { userModel } from "../lib/schema.js";
 
 export const data = new SlashCommandBuilder()
   .setName("reset")

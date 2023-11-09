@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import viewUser from "../lib/viewUser.ts";
+import viewUser from "../lib/viewUser.js";
 
 export const data = new SlashCommandBuilder()
   .setName("view")

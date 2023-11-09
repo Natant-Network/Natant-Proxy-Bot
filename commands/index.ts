@@ -1,19 +1,19 @@
-import * as Add from "./add.ts";
-import * as Category from "./category.ts";
-import * as DM from "./dm.ts";
-import * as GetStarted from "./get-started.ts";
-import * as Help from "./help.ts";
-import * as Limit from "./limit.ts";
-import * as List from "./list.ts";
-import * as Panel from "./panel.ts";
-import * as Proxy from "./proxy.ts";
-import * as ResetContextCMD from "./reset-contextCmd.ts";
-import * as Reset from "./reset.ts";
-import * as Usage from "./usage.ts";
-import * as ViewContextCMD from "./view-contextCmd.ts";
-import * as View from "./view.ts";
+import * as Add from "./add.js";
+import * as Category from "./category.js";
+import * as DM from "./dm.js";
+import * as GetStarted from "./get-started.js";
+import * as Help from "./help.js";
+import * as Limit from "./limit.js";
+import * as List from "./list.js";
+import * as Panel from "./panel.js";
+import * as Proxy from "./proxy.js";
+import * as ResetContextCMD from "./reset-contextCmd.js";
+import * as Reset from "./reset.js";
+import * as Usage from "./usage.js";
+import * as ViewContextCMD from "./view-contextCmd.js";
+import * as View from "./view.js";
 
-import type { DiscordClient, SlashCommand } from "../lib/types.ts";
+import type { DiscordClient, SlashCommand } from "../lib/types.js";
 
 // @ts-ignore
 const commands: SlashCommand[] = [

@@ -1,5 +1,5 @@
 import { Events, ActivityType } from "discord.js";
-import type { DiscordClient } from "../lib/types.ts";
+import type { DiscordClient } from "../lib/types.js";
 
 export default function registerHandler(client: DiscordClient) {
   function setPresence() {

@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { guildModel } from "../lib/schema.ts";
+import { guildModel } from "../lib/schema.js";
 
 export const data = new SlashCommandBuilder()
   .setName("get-started")

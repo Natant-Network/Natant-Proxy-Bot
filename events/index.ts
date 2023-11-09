@@ -1,8 +1,8 @@
-import InteractionCreate from "./InteractionCreate.ts";
-import MessageCreate from "./MessageCreate.ts";
-import Ready from "./Ready.ts";
+import InteractionCreate from "./InteractionCreate.js";
+import MessageCreate from "./MessageCreate.js";
+import Ready from "./Ready.js";
 
-import type { DiscordClient } from "../lib/types.ts";
+import type { DiscordClient } from "../lib/types.js";
 
 const handlers = [InteractionCreate, MessageCreate, Ready];
 

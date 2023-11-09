@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
-import { guildModel, userModel } from "./schema.ts";
-import { ClientMessages } from "./messages.ts";
+import { guildModel, userModel } from "./schema.js";
+import { ClientMessages } from "./messages.js";
 
 export default async function viewUser(user: any, GuildId: string) {
   const doc = await guildModel.findOne({ GuildId });

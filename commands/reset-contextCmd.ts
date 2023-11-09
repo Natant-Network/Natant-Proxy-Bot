@@ -1,5 +1,5 @@
 import { ContextMenuCommandBuilder, EmbedBuilder, ApplicationCommandType } from "discord.js";
-import resetUser from "../lib/resetUser.ts";
+import resetUser from "../lib/resetUser.js";
 
 export const data = new ContextMenuCommandBuilder()
   .setName("Reset Usage")

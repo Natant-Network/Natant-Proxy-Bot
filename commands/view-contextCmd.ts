@@ -1,5 +1,5 @@
 import { UserContextMenuCommandInteraction, ContextMenuCommandBuilder, ApplicationCommandType } from "discord.js";
-import viewUser from "../lib/viewUser.ts";
+import viewUser from "../lib/viewUser.js";
 
 export const data = new ContextMenuCommandBuilder()
   .setName("View Usage")

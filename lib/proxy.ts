@@ -1,10 +1,10 @@
 import {
   EmbedBuilder
 } from "discord.js";
-import { guildModel, userModel } from "../lib/schema.ts";
-import type { GuildLink } from "./types.ts";
+import { guildModel, userModel } from "../lib/schema.js";
+import type { GuildLink } from "./types.js";
 import { format } from "node:util";
-import { ClientMessages, ProxyMessages } from "./messages.ts";
+import { ClientMessages, ProxyMessages } from "./messages.js";
 
 interface ProxyMessage {
   dm: boolean;

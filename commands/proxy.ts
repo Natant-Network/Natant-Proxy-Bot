@@ -3,9 +3,9 @@ import {
   AutocompleteInteraction,
   SlashCommandBuilder
 } from "discord.js";
-import { guildModel } from "../lib/schema.ts";
-import { getProxy, ProxyError } from "../lib/proxy.ts";
-import { ClientMessages } from "../lib/messages.ts";
+import { guildModel } from "../lib/schema.js";
+import { getProxy, ProxyError } from "../lib/proxy.js";
+import { ClientMessages } from "../lib/messages.js";
 
 export const data = new SlashCommandBuilder()
   .setName("proxy")
