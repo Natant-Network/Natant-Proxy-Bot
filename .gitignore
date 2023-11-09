@@ -1,6 +1,4 @@
-node_modules/
-config.json
-pocketbase/pb_data/
-pocketbase/LICENSE.md
-pocketbase/pocketbase_0.7.9_linux_amd64.zip
-pocketbase/
+node_modules
+replit* # dev env
+log.log
+dist
