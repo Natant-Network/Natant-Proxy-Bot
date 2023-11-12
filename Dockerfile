@@ -7,6 +7,8 @@ COPY package.json .
 
 RUN npm install
 
-COPY dist .
+COPY . .
+
+RUN npm run tsc
 
 CMD ["npm", "run", "prod"]
