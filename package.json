@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ts-node --esm index.ts",
     "prod": "node index.js",
-    "tsc": "tsc"
+    "build": "tsc"
   },
   "contributors": [
     {
