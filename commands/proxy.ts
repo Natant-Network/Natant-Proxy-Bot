@@ -26,6 +26,7 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
   try {
     data = await getProxy(interaction, category);
   } catch(error) {
+    console.error(error);
     if(error instanceof ProxyError) return interaction.editReply({ content: error.message }); else return;
   }
   if(data.dm) {

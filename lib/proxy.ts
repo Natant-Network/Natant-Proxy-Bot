@@ -3,7 +3,6 @@ import {
 } from "discord.js";
 import { guildModel, userModel } from "../lib/schema.js";
 import type { GuildLink } from "./types.js";
-import { format } from "node:util";
 import { ClientMessages, ProxyMessages } from "./messages.js";
 
 interface ProxyMessage {
@@ -12,18 +11,15 @@ interface ProxyMessage {
 }
 
 export class ProxyError extends Error {
-  constructor(code: string, args: any[] = []) {
-    super();
+  constructor(message: string) {
+    super(message);
     this.name = "ProxyError";
-    let msg = format(code || "", ...args);
-    this.message = msg;
   }
 }
 
 export function getProxy(interaction: any, category: string) : Promise<ProxyMessage> {
   return new Promise(async (resolve, reject) => {
-    // @ts-ignore guild.id cannot be undefined
-    const GuildId: string = interaction.guild.id;
+    const GuildId: string = interaction.guild!.id;
     const UserId = interaction.user.id;
 
     var _save = false;
@@ -39,7 +35,6 @@ export function getProxy(interaction: any, category: string) : Promise<ProxyMess
     if (!user) {
       user = new userModel({
         UserId,
-        thisMonth: 0,
         links: [],
         guilds: {}
       });
@@ -57,19 +52,19 @@ export function getProxy(interaction: any, category: string) : Promise<ProxyMess
       await doc.save();
       _save = false;
     }
-    if (!doc.types.includes(category)) return reject(new ProxyError(ProxyMessages.ERR_CATEGORY_NOT_FOUND, [category]));
+    if (!doc.types.includes(category)) return reject(new ProxyError(ProxyMessages.ERR_CATEGORY_NOT_FOUND.replace("%s", category)));
 
     if (user && (user.guilds[GuildId].uses) >= LinkLimit) {
-      return reject(new ProxyError(ProxyMessages.ERR_REACHED_LINK_LIMIT, [LinkLimit]));
+      return reject(new ProxyError(ProxyMessages.ERR_REACHED_LINK_LIMIT.replace("%s", LinkLimit.toString())));
     }
 
-    if (doc.links.length === 0) return reject(new ProxyError(ProxyMessages.ERR_NO_LINKS, [category]));
+    if (doc.links.length === 0) return reject(new ProxyError(ProxyMessages.ERR_NO_LINKS.replace("%s", category)));
 
     // Select a random link from the document's links array that the user has not already received
     const linksToChooseFrom = doc.links.filter(
       (link: GuildLink) => !(user.guilds[GuildId].links).includes(link.domain)
     );
-    if (linksToChooseFrom.length === 0) return reject(new ProxyError(ProxyMessages.ERR_GOT_ALL_LINKS, [category]));
+    if (linksToChooseFrom.length === 0) return reject(new ProxyError(ProxyMessages.ERR_GOT_ALL_LINKS.replace("%s", category)));
     const randomLink = linksToChooseFrom[Math.floor(Math.random() * linksToChooseFrom.length)];
 
     // Create a Embed

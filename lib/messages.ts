@@ -6,7 +6,8 @@ export const ClientMessages = {
   ERR_FAILED_DM: "Failed to DM you the requested link!",
   MSG_CHECK_DMS: "Check your DMs for the requested link!",
   ERR_USER_NOT_USED_BOT: "That user has not used the proxy bot!",
-  ERR_YOU_HAVE_NOT_USED_BOT: "You have not used the proxy bot!"
+  ERR_YOU_HAVE_NOT_USED_BOT: "You have not used the proxy bot!",
+  ERR_NO_LINKS_ADMIN: "No links found! Add one with /link add"
 }
 
 export const ProxyMessages = {

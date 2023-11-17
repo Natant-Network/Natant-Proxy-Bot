@@ -4,7 +4,6 @@ export interface DiscordClient extends Client {
   commands: Collection<String, SlashCommand>;
   loadSlashCommands: Function;
   loadEventHandlers: Function;
-  logger: any;
 }
 
 export interface SlashCommand {

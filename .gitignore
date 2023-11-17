@@ -1,4 +1,5 @@
 node_modules
 replit* # dev env
+dev.ts
 log.log
 dist

@@ -14,8 +14,6 @@ export const data = new SlashCommandBuilder()
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
   const user = interaction.options.getUser("user", true);
-  // @ts-ignore
-  const gid: string = interaction.guild.id;
-  const data = await viewUser(user, gid);
+  const data = await viewUser(user, interaction.guild!.id);
   interaction.reply(data);
 }

@@ -4,8 +4,8 @@
   "description": "A multi-server proxy bot for Discord",
   "type": "module",
   "scripts": {
-    "start": "ts-node --esm index.ts",
-    "prod": "node dist/index.js",
+    "start": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" node manager.ts",
+    "prod": "node manager.js",
     "build": "tsc"
   },
   "contributors": [
@@ -24,6 +24,7 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

@@ -8,8 +8,6 @@ export const data = new ContextMenuCommandBuilder()
   .setDMPermission(false);
 
 export async function run(client: any, interaction: UserContextMenuCommandInteraction) {
-  // @ts-ignore
-  const gid: string = interaction.guild.id;
-  const data = await viewUser(interaction.targetUser, gid);
+  const data = await viewUser(interaction.targetUser, interaction.guild!.id);
   interaction.reply(data);
 }

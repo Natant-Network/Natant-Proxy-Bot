@@ -1,31 +1,34 @@
 import { Events, ActivityType } from "discord.js";
 import type { DiscordClient } from "../lib/types.js";
 
-export default function registerHandler(client: DiscordClient) {
-  function setPresence() {
-    client.user?.setPresence({
-      status: "online",
-      activities: [
-        {
-          name: `${client.guilds.cache.size} server${client.guilds.cache.size !== 1 ? "s" : ""}`,
-          type: ActivityType.Watching
-        }
-      ]
-    });
-  };
+async function getServerCount(client: DiscordClient) {
+  if(client.shard) return (await client.shard.fetchClientValues("guilds.cache.size")).reduce((a: any, b: any) => a + b);
+  return client.guilds.cache.size;
+}
+
+async function setPresence(client: DiscordClient) {
+  const serverCount = await getServerCount(client);
+  client.user?.setPresence({
+    status: "online",
+    activities: [
+      {
+        name: `${serverCount} server${serverCount !== 1 ? "s" : ""}${Array.isArray(client.shard?.ids) ? ` | Shard ${client.shard?.ids}` : ""}`,
+        type: ActivityType.Watching
+      }
+    ]
+  });
+};
+
+export default async function registerHandler(client: DiscordClient) {
   client.once(Events.ClientReady, () => {
-    const { logger } = client;
-    logger.log({
-      level: "info",
-      message: `Logged in as ${client.user?.tag} (${client.user?.id})`
-    });
+    console.log(`Logged in as ${client.user?.tag} (${client.user?.id})`);
 
     // Register the commands
     const data: any = client.commands.map(command => command?.data);
     client.application?.commands.set(data);
 
     // Set the bot's status
-    setPresence();
-    setInterval(setPresence, 300000); // 5 minutes
+    setPresence(client);
+    setInterval(setPresence, 300000, client); // 5 minutes
   });
 }

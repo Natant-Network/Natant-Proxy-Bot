@@ -14,8 +14,7 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
-  // @ts-ignore you know what by now
-  const GuildId: string = interaction.guild.id;
+  const GuildId: string = interaction.guild!.id;
   const doc = await guildModel.findOne({ GuildId });
   if (!doc) return interaction.reply({ content: ClientMessages.ERR_SERVER_NOT_FOUND_ADMIN, ephemeral: true });
   const enable = interaction.options.getBoolean("enabled", true);

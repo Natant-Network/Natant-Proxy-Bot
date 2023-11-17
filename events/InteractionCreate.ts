@@ -7,7 +7,6 @@ import { ClientMessages } from "../lib/messages.js";
 const proxyButtonPrefix = "$LM_TYPE$:";
 
 export default function registerHandler(client: DiscordClient) {
-  const { logger } = client;
   client.on(Events.InteractionCreate, async (interaction: BaseInteraction) => {
     if (interaction.isChatInputCommand()) {
       // @ts-ignore We check for null values later

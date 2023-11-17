@@ -41,7 +41,6 @@ export const data = new SlashCommandBuilder()
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
   try {
-    const category: string = interaction.options.getString("category", true);
     const link: string = interaction.options.getString("link", true);
     const doc = await guildModel.findOne({
       GuildId: interaction.guild?.id
@@ -53,6 +52,7 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
     const subcommand: string = interaction.options.getSubcommand();
 
     if(subcommand == "add") {
+      const category: string = interaction.options.getString("category", true);
       if(!doc.types.includes(category)) return interaction.reply({
         content: `Invalid category \`${category}\``,
         ephemeral: true
@@ -64,6 +64,10 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
           ephemeral: true
         });
       }
+      if(doc.links.find(e => e.domain == link)) return interaction.reply({
+        content: "This link already exists!",
+        ephemeral: true
+      })
       doc.links.push({
         type: category,
         domain: link
@@ -73,10 +77,11 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
         .setDescription(`✅ Added link \`${link}\` to category \`${category}\``)
       interaction.reply({ embeds: [embed], ephemeral: true });
     } else if(subcommand == "remove") {
-      const i: number = findIndex(doc.links, {
-        type: category,
-        domain: link
-      })
+      const i: number = doc.links.findIndex(e => e.domain == link);
+      if(i == -1) return interaction.reply({
+        content: `Invalid link \`${link}\``,
+        ephemeral: true
+      });
       doc.links.splice(i, 1);
       await doc.save();
       const embed = new EmbedBuilder()
@@ -102,12 +107,3 @@ export async function autocomplete(client: any, interaction: AutocompleteInterac
     data.map(type => ({ name: type, value: type }))
   );
 }
-
-function findIndex(domains: Array<GuildLink>, e: GuildLink): number {
-  let i = 0;
-  while (i < domains.length) {
-    if (domains[i].domain == e.domain && domains[i].type == e.type) return i;
-    i++;
-  }
-  return 0;
-};

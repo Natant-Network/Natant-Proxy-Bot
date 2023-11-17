@@ -8,8 +8,7 @@ export const data = new ContextMenuCommandBuilder()
   .setDMPermission(false);
 
 export async function run(client: any, interaction: any) {
-  // @ts-ignore DM permission is set to false, guild.id cannot be null
-  const data = await resetUser(interaction.targetUser.id, interaction.guild.id);
+  const data = await resetUser(interaction.targetUser.id, interaction.guild!.id);
   if(!data.done) return interaction.reply({
     content: "User not found in database!",
     ephemeral: true

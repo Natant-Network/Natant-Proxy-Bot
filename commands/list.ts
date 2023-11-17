@@ -14,8 +14,12 @@ export async function run(client: any, interaction: CommandInteraction) {
     content: ClientMessages.ERR_SERVER_NOT_FOUND_ADMIN,
     ephemeral: true
   });
+  if(!doc.links) return interaction.reply({
+    content: ClientMessages.ERR_NO_LINKS_ADMIN,
+    ephemeral: true
+  });
   
-  const links = (doc?.links || []).map(link => `${link.domain} - ${link.type}`);
+  const links = doc.links.map(link => `${link.domain} - ${link.type}`);
 
   const embed = new EmbedBuilder()
     .setTitle("Links")
