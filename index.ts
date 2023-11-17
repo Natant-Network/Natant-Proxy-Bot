@@ -2,7 +2,6 @@ import { Client, GatewayIntentBits, Collection } from "discord.js";
 
 import { loadEventHandlers } from "./events/index.js";
 import { loadSlashCommands } from "./commands/index.js";
-import { register } from "./dev.js";
 
 import type { DiscordClient, SlashCommand } from "./lib/types.js";
 
@@ -17,7 +16,6 @@ client.commands = new Collection<String, SlashCommand>();
 
 loadEventHandlers(client);
 loadSlashCommands(client);
-register(client);
 
 mongoose.connect(process.env.MONGODB_URI || "").then(() => console.log("MongoDB connected")).catch(err => {
   console.log("Failed to connect to MongoDB");
