@@ -11,6 +11,7 @@ const tips: string[] = [
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
   const commandData = client.commands.map((c: SlashCommand) => c.data);
+  
   const slashCommandData = commandData
     .filter((command: any) => command instanceof SlashCommandBuilder)
     .map((c: any) => `\`${c.name}\``);

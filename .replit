@@ -1,4 +1,4 @@
-run = ["yarn", "start"]
+run = ["./node_modules/.bin/ts-node", "--esm", "index.ts"]
 
 [nix]
 channel = "stable-23_05"

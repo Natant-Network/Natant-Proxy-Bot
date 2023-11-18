@@ -27,7 +27,7 @@ export const data = new SlashCommandBuilder()
 
 export async function run(client: any, interaction: ChatInputCommandInteraction) {
   const subcommand: string = interaction.options.getSubcommand();
-  const doc = await guildModel.findOne({ GuildId: interaction.guild?.id });
+  const doc = await guildModel.findOne({ GuildId: interaction.guild!.id });
   if (!doc) return interaction.reply({
     content: ClientMessages.ERR_SERVER_NOT_FOUND_ADMIN,
     ephemeral: true

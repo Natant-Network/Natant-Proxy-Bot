@@ -36,7 +36,7 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
   try {
     const category = interaction.options.getString("category", true);
     const doc = await guildModel.findOne({
-      GuildId: interaction.guild?.id
+      GuildId: interaction.guild!.id
     });
     if (!doc) return interaction.reply({
       content: ClientMessages.ERR_SERVER_NOT_FOUND_ADMIN,
@@ -71,7 +71,7 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
 }
 
 export async function autocomplete(client: any, interaction: AutocompleteInteraction) {
-  const doc = await guildModel.findOne({ GuildId: interaction.guild?.id });
+  const doc = await guildModel.findOne({ GuildId: interaction.guild!.id });
   if (!doc) return interaction.respond([]);
   const input: string = interaction.options.getFocused();
   const data: string[] = doc.types.filter((type) => type.startsWith(input));

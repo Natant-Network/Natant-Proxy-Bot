@@ -8,11 +8,11 @@ async function getServerCount(client: DiscordClient) {
 
 async function setPresence(client: DiscordClient) {
   const serverCount = await getServerCount(client);
-  client.user?.setPresence({
+  client.user!.setPresence({
     status: "online",
     activities: [
       {
-        name: `${serverCount} server${serverCount !== 1 ? "s" : ""}${Array.isArray(client.shard?.ids) ? ` | Shard ${client.shard?.ids}` : ""}`,
+        name: `${serverCount} server${serverCount !== 1 ? "s" : ""}${Array.isArray(client.shard?.ids) ? ` | Shard ${client.shard!.ids}` : ""}`,
         type: ActivityType.Watching
       }
     ]
@@ -21,7 +21,7 @@ async function setPresence(client: DiscordClient) {
 
 export default async function registerHandler(client: DiscordClient) {
   client.once(Events.ClientReady, () => {
-    console.log(`Logged in as ${client.user?.tag} (${client.user?.id})`);
+    console.log(`Logged in as ${client.user!.tag} (${client.user!.id})`);
 
     // Register the commands
     const data: any = client.commands.map(command => command?.data);

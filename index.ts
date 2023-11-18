@@ -7,10 +7,8 @@ import type { DiscordClient, SlashCommand } from "./lib/types.js";
 
 import mongoose from "mongoose";
 
-// We want GuildMessages to tell the users who try to use message commands
-// that we do not use them
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
+  intents: [GatewayIntentBits.Guilds]
 }) as DiscordClient;
 client.commands = new Collection<String, SlashCommand>();
 
@@ -19,7 +17,7 @@ loadSlashCommands(client);
 
 mongoose.connect(process.env.MONGODB_URI || "").then(() => console.log("MongoDB connected")).catch(err => {
   console.log("Failed to connect to MongoDB");
-  console.log(err);
+  throw err;
 });
 
 client.login();

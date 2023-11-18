@@ -26,7 +26,6 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
   try {
     data = await getProxy(interaction, category);
   } catch(error) {
-    console.error(error);
     if(error instanceof ProxyError) return interaction.editReply({ content: error.message }); else return;
   }
   if(data.dm) {
@@ -41,7 +40,7 @@ export async function run(client: any, interaction: ChatInputCommandInteraction)
 }
 
 export async function autocomplete(client: any, interaction: AutocompleteInteraction) {
-  const doc = await guildModel.findOne({ GuildId: interaction.guild?.id });
+  const doc = await guildModel.findOne({ GuildId: interaction.guild!.id });
   if(!doc) return interaction.respond([]);
   const input: string = interaction.options.getFocused();
   const data: string[] = doc.types.filter(type => type.startsWith(input));

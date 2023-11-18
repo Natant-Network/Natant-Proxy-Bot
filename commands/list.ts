@@ -9,7 +9,7 @@ export const data = new SlashCommandBuilder()
   .setDMPermission(false);
 
 export async function run(client: any, interaction: CommandInteraction) {
-  const doc = await guildModel.findOne({ GuildId: interaction.guild?.id });
+  const doc = await guildModel.findOne({ GuildId: interaction.guild!.id });
   if (!doc) return interaction.reply({
     content: ClientMessages.ERR_SERVER_NOT_FOUND_ADMIN,
     ephemeral: true
